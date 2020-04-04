@@ -149,12 +149,25 @@ export const constantRoutes = [
   },
 
   {
-    path: 'external-link',
+    path: '/external-link',
     component: Layout,
     children: [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        meta: { title: 'external-link', icon: 'link' }
+      }
+    ]
+  },
+
+  {
+    path: '/myTest',
+    component: Layout,
+    name: 'myTest',
+    children: [
+      {
+        path: 'myTest',
+        meta: { title: 'myTest2', icon: 'test' },
+        component: () => import('@/views/test/test.vue')
       }
     ]
   },
