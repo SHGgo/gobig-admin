@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 60000 // request timeout,1 minute
 })
 
 // request interceptor
@@ -44,7 +44,6 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-
     // if the custom status is not 20000, it is judged as an error.
     if (res.status !== 20000) {
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;

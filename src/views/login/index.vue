@@ -121,10 +121,17 @@ export default {
                   type: 'error',
                   duration: 6 * 1000
                 })
+              } else {
+                this.$message({
+                  message: error,
+                  type: 'error',
+                  duration: 6 * 1000
+                })
               }
               this.loading = false
             })
         } else {
+          // TODO 解决
           console.log('error submit!!')
           return false
         }

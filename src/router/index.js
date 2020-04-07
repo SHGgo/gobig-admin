@@ -160,14 +160,15 @@ export const constantRoutes = [
   },
 
   {
-    path: '/myTest',
+    path: '/userManage',
     component: Layout,
-    name: 'myTest',
+    name: 'userManage',
+    // meta: { title: '用户管理', icon: 'user' },
     children: [
       {
-        path: 'myTest',
-        meta: { title: 'myTest2', icon: 'test' },
-        component: () => import('@/views/test/test.vue')
+        path: 'userManage',
+        meta: { title: '用户管理', icon: 'user' },
+        component: () => import('@/views/userManage/index')
       }
     ]
   },

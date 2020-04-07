@@ -39,7 +39,7 @@ module.exports = {
     proxy: {
       '/dev-api': { // 这里最好有一个 /
         target: 'http://localhost:8080/gobig', // 后台接口域名
-        ws: true, // 如果要代理 websocket，配置这个参数
+        ws: false, // 如果要代理 websocket，配置这个参数
         secure: false, // 如果是https接口，需要配置这个参数
         changeOrigin: true, // 是否跨域
         pathRewrite: {
@@ -50,7 +50,6 @@ module.exports = {
         }
       }
     },
-    before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
