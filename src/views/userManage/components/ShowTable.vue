@@ -1,26 +1,121 @@
 <!--  -->
 <template>
-  <div />
+  <div class="show-table-container">
+    <el-table
+      ref="showTbale"
+      :data="tableData"
+      border
+      stripe
+      empty-text
+      style="width: 100%"
+    >
+      <el-table-column type="index" align="center" width="50" label="序列" />
+      <el-table-column property="uid" align="center" label="uid" width="100" />
+      <el-table-column property="figure" align="center" label="头像" width="100">
+        <template slot-scope="scope">
+          <img class="figure border-radius-circle" :src="scope.row.figure" alt="">
+        </template>
+      </el-table-column>
+      <el-table-column property="nickName" align="left" label="昵称" width="150" />
+      <el-table-column property="gender" align="center" label="性别" width="100">
+        <template slot-scope="scope">
+          {{ genderFix(scope.row.gender) }}
+        </template>
+      </el-table-column>
+      <el-table-column property="signature" align="left" label="签名" width="400" />
+      <el-table-column property="birthDate" align="center" label="生日" width="120">
+        <template slot-scope="scope">
+          {{ scope.row.birthDate | parseTime('{y}-{m}-{d}') }}
+        </template>
+      </el-table-column>
+      <el-table-column property="attentionCount" align="center" label="关注数" width="100" />
+      <el-table-column property="fanCount" align="center" label="粉丝数" width="100" />
+      <el-table-column property="likeCount" align="center" label="点赞数" width="100" />
+      <el-table-column property="viewCount" align="center" label="播放数" width="100" />
+      <el-table-column align="center" label="Actions">
+        <template slot-scope="scope">
+          <el-button type="primary" size="small" icon="el-icon-edit">
+            编辑
+          </el-button>
+          <el-button type="danger" size="small" icon="el-icon-delete">
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="pageSearch" />
+  </div>
 </template>
 
 <script>
+import { parseTime } from '@/utils/index'
+import Pagination from '@/components/Pagination'
 export default {
+  filters: {
+    parseTime
+  },
+  components: {
+    Pagination
+  },
   data() {
     return {
-
+      tableData: this.$store.state.userManage.showTable,
+      total: 0,
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        limit: 10
+      }
     }
   },
-  // 生命周期 - 创建完成（访问当前this实例）
-  created() {
-
+  computed: {
+    watchShowTbale() {
+      return this.$store.state.userManage.showTable
+    },
+    genderFix(genderNum) {
+      return (genderNum) => {
+        if (Number.parseInt(genderNum) === 1) {
+          return '男'
+        } else {
+          return '女'
+        }
+      }
+    }
   },
-  // 生命周期 - 挂载完成（访问DOM元素）
-  mounted() {
-
+  watch: {
+    watchShowTbale(newShowTable) {
+      this.tableData = newShowTable.table
+      this.total = newShowTable.total
+    }
+  },
+  created() {
+    this.pageSearch()
+  },
+  methods: {
+    pageSearch() {
+      this.listLoading = true
+      const pageStart = (this.listQuery.page - 1) * this.listQuery.limit
+      // TODO dispatch多参数传递
+      this.$store.dispatch('userManage/search', { pageStart, pageItemNum: this.listQuery.limit })
+        .then((response) => {
+          this.total = response.total
+        }).catch((error) => {
+          this.$message({
+            message: error,
+            type: 'error',
+            duration: 6 * 1000
+          })
+        })
+    }
   }
 }
 </script>
-<style scoped>
-/* @import url(); 引入css类 */
-
+<style lang="scss" scoped>
+.show-table-container{
+  .figure{
+    width:50px;
+    height:50px;
+  }
+}
 </style>

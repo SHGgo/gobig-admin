@@ -4,7 +4,7 @@
     <search-bar />
     <!-- <button-bar /> -->
     <!-- <state-bar /> -->
-    <!-- <show-table /> -->
+    <show-table />
   </div>
 </template>
 
