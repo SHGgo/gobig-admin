@@ -13,7 +13,14 @@
       <el-table-column property="uid" align="center" label="uid" width="100" />
       <el-table-column property="figure" align="center" label="头像" width="100">
         <template slot-scope="scope">
-          <img class="figure border-radius-circle" :src="scope.row.figure" alt="">
+          <el-image class="figure border-radius-circle" :src="scope.row.figure" :preview-src-list="[scope.row.figure]" lazy>
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture-outline" />
+            </div>
+            <div slot="placeholder" class="image-slot">
+              <i class="el-icon-loading" />
+            </div>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column property="nickName" align="left" label="昵称" width="150" />
@@ -32,7 +39,7 @@
       <el-table-column property="fanCount" align="center" label="粉丝数" width="100" />
       <el-table-column property="likeCount" align="center" label="点赞数" width="100" />
       <el-table-column property="viewCount" align="center" label="播放数" width="100" />
-      <el-table-column align="center" label="Actions">
+      <el-table-column align="center" label="Actions" min-width="200">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit">
             编辑
@@ -60,7 +67,7 @@ export default {
   },
   data() {
     return {
-      tableData: this.$store.state.userManage.showTable,
+      tableData: [],
       total: 0,
       listLoading: true,
       listQuery: {
@@ -114,6 +121,9 @@ export default {
 <style lang="scss" scoped>
 .show-table-container{
   .figure{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     width:50px;
     height:50px;
   }

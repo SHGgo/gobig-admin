@@ -2,7 +2,7 @@
 <template>
   <div class="app-container">
     <search-bar />
-    <!-- <button-bar /> -->
+    <button-bar class="button-bar" />
     <!-- <state-bar /> -->
     <show-table />
   </div>
@@ -27,7 +27,11 @@ export default {
   }
 }
 </script>
-<style scoped>
-/* @import url(); 引入css类 */
+<style lang="scss" scoped>
+.app-container{
+  .button-bar{
+    margin-bottom: 20px;
+  }
+}
 
 </style>

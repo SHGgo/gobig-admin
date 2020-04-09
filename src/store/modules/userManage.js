@@ -1,8 +1,9 @@
-import { search } from '@/api/userManage'
+import { search, insertUserContent } from '@/api/userManage'
 import { userManageSearchFix } from '@/utils/search-param'
 
 const getDefaultState = () => ({
-  showTable: null,
+  userInfo: {},
+  showTable: [],
   keyWord: '',
   condition: ''
 })
@@ -18,6 +19,9 @@ const mutations = {
   },
   SET_CONDITION(state, condition) {
     state.condition = condition
+  },
+  SET_USERINFO(state, userInfo) {
+    state.userInfo = userInfo
   }
 }
 
@@ -37,6 +41,21 @@ const actions = {
         }
         commit('SET_SHOWTABLE', data)
         resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  /**
+   *
+   * @param {JSON} json
+   * @param {FormData} formData
+   */
+  inset({ commit, state }, { json, formData }) {
+    return new Promise((resolve, reject) => {
+      insertUserContent(json).then(response => {
+        formData.set('uid', response.data.user.uid)
+        resolve()
       }).catch(error => {
         reject(error)
       })

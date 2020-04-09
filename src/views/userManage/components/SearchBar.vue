@@ -36,7 +36,7 @@ export default {
         }
       } else if (this.searchForm.condition === 'nickName') {
         // nickName验证
-        if (!/^[a-zA-Z0-9_-\u4E00-\u9FA5]{1,10}$/.test(value)) {
+        if (!/^[\u4E00-\u9FA5a-zA-Z0-9_-]{1,10}$/.test(value)) {
           callback(new Error('最多10位汉字、数字、字母等字符'))
           return
         }
@@ -76,11 +76,17 @@ export default {
       // 验证后搜索
       this.$refs.searchForm.validate(valid => {
         if (valid) {
-          this.$store.dispatch('userManage/search', {}).catch((error) => {
+          this.$store.dispatch('userManage/search', {}).then(() => {
+            this.$message({
+              message: '查询成功',
+              type: 'success',
+              duration: 3 * 1000
+            })
+          }).catch((error) => {
             this.$message({
               message: error,
               type: 'error',
-              duration: 6 * 1000
+              duration: 3 * 1000
             })
           })
         } else {
