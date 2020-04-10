@@ -179,9 +179,18 @@ export default {
           const formData = new FormData()
           formData.set('file', this.figureFire)
           const json = this.paramFix()
-          this.$store.dispatch('userManage/inset', { json, formData })
+          this.$store.dispatch('userManage/inset', { json, formData }).then(() => {
+            // 上传成功，处理并展示
+            this.$message({
+              message: '添加用户成功',
+              type: 'success'
+            })
+          }).catch((error) => {
+            // 上传成功,处理并展示
+            const message = this.errorFix(error)
+            this.$alert(message, '添加失败', { confirmButtonText: '确定' })
+          })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -206,6 +215,18 @@ export default {
         viewCount: this.userInfoForm.viewCount
       }
       return { user, userContent }
+    },
+    // TODO: 抽出
+    errorFix(error) {
+      let message = ''
+      switch (error) {
+        case 40301:
+          message = '用户账号重复，请更换用户账号'
+          break
+        default:
+          message = '未知原因，请重新添加用户'
+      }
+      return message
     }
   }
 }

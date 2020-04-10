@@ -1,4 +1,4 @@
-import { search, insertUserContent } from '@/api/userManage'
+import { search, insertUserContent, uploadUserFigure } from '@/api/userManage'
 import { userManageSearchFix } from '@/utils/search-param'
 
 const getDefaultState = () => ({
@@ -55,6 +55,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       insertUserContent(json).then(response => {
         formData.set('uid', response.data.user.uid)
+      }).then(() => {
+        uploadUserFigure(formData)
         resolve()
       }).catch(error => {
         reject(error)

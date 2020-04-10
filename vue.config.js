@@ -37,6 +37,7 @@ module.exports = {
       errors: true
     },
     proxy: {
+      // 开发接口
       '/dev-api': { // 这里最好有一个 /
         target: 'http://localhost:8080/gobig', // 后台接口域名
         ws: false, // 如果要代理 websocket，配置这个参数
@@ -49,7 +50,7 @@ module.exports = {
           '/gobig': '/'
         }
       }
-    },
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
