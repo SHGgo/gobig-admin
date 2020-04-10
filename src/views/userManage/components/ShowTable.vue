@@ -41,7 +41,7 @@
       <el-table-column property="viewCount" align="center" label="播放数" width="100" />
       <el-table-column align="center" label="Actions" min-width="200">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit">
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row)">
             编辑
           </el-button>
           <el-button type="danger" size="small" icon="el-icon-delete">
@@ -50,7 +50,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="pageSearch" />
   </div>
 </template>
@@ -73,7 +72,8 @@ export default {
       listQuery: {
         page: 1,
         limit: 10
-      }
+      },
+      dialogInfoVisible: false
     }
   },
   computed: {
@@ -114,6 +114,11 @@ export default {
             duration: 6 * 1000
           })
         })
+    },
+    editUser(userInfo) {
+      // userInfo是指向table改变的元素的指针
+      this.$store.commit('userManage/SET_USERINFO', userInfo)
+      this.$store.commit('userManage/SET_DIALOG', true)
     }
   }
 }

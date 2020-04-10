@@ -1,11 +1,12 @@
-import { search, insertUserContent, uploadUserFigure } from '@/api/userManage'
+import { search, insertUserContent, uploadUserFigure, uploadUserContent } from '@/api/userManage'
 import { userManageSearchFix } from '@/utils/search-param'
 
 const getDefaultState = () => ({
-  userInfo: {},
   showTable: [],
   keyWord: '',
-  condition: ''
+  condition: '',
+  userInfo: null, // userInfo是指向table改变的元素的指针
+  dialogInfoVisible: false
 })
 
 const state = getDefaultState()
@@ -22,6 +23,9 @@ const mutations = {
   },
   SET_USERINFO(state, userInfo) {
     state.userInfo = userInfo
+  },
+  SET_DIALOG(state, dialogInfoVisible) {
+    state.dialogInfoVisible = dialogInfoVisible
   }
 }
 
@@ -57,6 +61,24 @@ const actions = {
         formData.set('uid', response.data.user.uid)
       }).then(() => {
         uploadUserFigure(formData)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  /**
+   *
+   * @param {JSON} json
+   * @param {FormData} formData
+   */
+  update({ commit, state }, { json, formData }) {
+    return new Promise((resolve, reject) => {
+      uploadUserContent(json).then(() => {
+        if (formData) {
+          formData.set('uid', json.uid)
+          uploadUserFigure(formData)
+        }
         resolve()
       }).catch(error => {
         reject(error)

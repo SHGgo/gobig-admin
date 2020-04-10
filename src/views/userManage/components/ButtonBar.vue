@@ -6,16 +6,11 @@
         添加
       </el-button>
     </el-row>
-    <InsertAndEditUserInfo :dialog-info-visible.sync="dialogInfoVisible" />
   </div>
 </template>
 
 <script>
-import InsertAndEditUserInfo from './massageBox/InsertAndEditUserInfo'
 export default {
-  components: {
-    InsertAndEditUserInfo
-  },
   data() {
     return {
       dialogInfoVisible: false
@@ -23,7 +18,7 @@ export default {
   },
   methods: {
     insertUser() {
-      this.dialogInfoVisible = true
+      this.$store.commit('userManage/SET_DIALOG', true)
     }
   }
 }

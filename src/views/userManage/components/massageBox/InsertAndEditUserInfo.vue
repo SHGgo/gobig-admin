@@ -1,9 +1,9 @@
 <!--  -->
 <template>
   <div class="dialog-Info-container">
-    <el-dialog title="添加用户" :visible.sync="crruentVisible" center>
+    <el-dialog :title="userInfo?'更新用户':'添加用户'" :visible.sync="crruentVisible" center @close="closeDialog">
       <el-form ref="userInfoForm" :rules="rules" label-width="80px" :model="userInfoForm">
-        <el-row>
+        <el-row v-if="!userInfo">
           <el-col :span="6">
             <el-form-item prop="userAccount" label="用户账号">
               <el-input v-model="userInfoForm.userAccount" style="width:220px" />
@@ -70,7 +70,8 @@
           </el-col>
         </el-row>
         <el-form-item style="margin-top:30px">
-          <el-button type="primary" icon="el-icon-plus" @click="submitForm('userInfoForm')">立即添加</el-button>
+          <el-button v-if="userInfo" type="primary" icon="el-icon-upload" @click="submitForm('userInfoForm')">立即更新</el-button>
+          <el-button v-else type="primary" icon="el-icon-plus" @click="submitForm('userInfoForm')">立即添加</el-button>
           <el-button style="margin-left:50px" @click="resetForm('userInfoForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -100,8 +101,8 @@ export default {
       callback()
     }
     return {
-      figureFire: {},
-      userInfoForm: {
+      figureFile: null,
+      defaultUserInfoForm: {
         userAccount: '',
         pwd: '',
         nickName: '',
@@ -114,6 +115,7 @@ export default {
         likeCount: 0,
         viewCount: 0
       },
+      userInfoForm: null,
       rules: {
         userAccount: [
           { required: true, message: '请输入用户账号', trigger: 'blur' },
@@ -152,7 +154,23 @@ export default {
       set(val) {
         this.$emit('update:dialogInfoVisible', val)
       }
+    },
+    userInfo: {
+      get() {
+        return this.$store.state.userManage.userInfo
+      }
     }
+  },
+  watch: {
+    // Unexpected side effect in "userInfo" computed property
+    // 计算属性内不应该对属性值做变更，解决这个问题的做法之一是使用watch监听
+    userInfo(newValue) {
+      // 浅拷贝
+      this.userInfoForm = Object.assign({}, newValue) || this.defaultUserInfoForm
+    }
+  },
+  created() {
+    this.userInfoForm = this.defaultUserInfoForm
   },
   methods: {
     checkAndPreviewImg(file) {
@@ -168,7 +186,7 @@ export default {
       if (isJPG && isLt2M) {
         // 需要释放内存URL.revokeObjectURL()
         this.userInfoForm.figure = URL.createObjectURL(file)
-        this.figureFire = file
+        this.figureFile = file
       }
       // 不自动上传
       return false
@@ -176,29 +194,60 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const formData = new FormData()
-          formData.set('file', this.figureFire)
-          const json = this.paramFix()
-          this.$store.dispatch('userManage/inset', { json, formData }).then(() => {
-            // 上传成功，处理并展示
-            this.$message({
-              message: '添加用户成功',
-              type: 'success'
-            })
-          }).catch((error) => {
-            // 上传成功,处理并展示
-            const message = this.errorFix(error)
-            this.$alert(message, '添加失败', { confirmButtonText: '确定' })
-          })
+          let formData = new FormData()
+          this.figureFile ? formData.set('file', this.figureFile) : formData = null // 是否上传头像
+          if (this.userInfo) {
+            // this.userInfoForm没有账号密码
+            this.editUser(this.userInfoForm, formData)
+          } else {
+            const json = this.insertJsonFix()
+            this.inserUser(json, formData)
+          }
         } else {
           return false
         }
       })
     },
+    editUser(json, formData) {
+      this.$store.dispatch('userManage/update', { json, formData }).then(() => {
+        // 上传成功，处理并展示
+        Object.assign(this.userInfo, this.userInfoForm)
+        this.$message({
+          message: '更新用户成功',
+          type: 'success'
+        })
+      }).catch((error) => {
+        // 上传成功,处理并展示
+        console.log(error)
+        const message = this.errorFix(error)
+        this.$alert(message, '更新失败', { confirmButtonText: '确定' })
+      })
+    },
+    inserUser(json, formData) {
+      this.$store.dispatch('userManage/inset', { json, formData }).then(() => {
+        // 上传成功，处理并展示
+        this.$message({
+          message: '添加用户成功',
+          type: 'success'
+        })
+      }).catch((error) => {
+        // 上传成功,处理并展示
+        console.log(error)
+        const message = this.errorFix(error)
+        this.$alert(message, '添加失败', { confirmButtonText: '确定' })
+      })
+    },
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    paramFix() {
+    closeDialog() {
+      this.$store.commit('userManage/SET_USERINFO', null)
+    },
+    changeTableUserInfo() {
+      // userInfo指向table改变的元素
+    },
+    insertJsonFix() {
+      // 分离user和userContent
       const user = {
         userAccount: this.userInfoForm.userAccount,
         pwd: this.userInfoForm.pwd
@@ -224,7 +273,7 @@ export default {
           message = '用户账号重复，请更换用户账号'
           break
         default:
-          message = '未知原因，请重新添加用户'
+          message = '未知原因，请重新操作'
       }
       return message
     }
