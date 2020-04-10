@@ -41,12 +41,8 @@
       <el-table-column property="viewCount" align="center" label="播放数" width="100" />
       <el-table-column align="center" label="Actions" min-width="200">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row)">
-            编辑
-          </el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete">
-            删除
-          </el-button>
+          <el-button type="primary" size="small" :disabled="loading" @click="editUser(scope.row)">编辑</el-button>
+          <el-button type="danger" size="small" @click="deleteUserWarning(scope,tableData)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -73,7 +69,8 @@ export default {
         page: 1,
         limit: 10
       },
-      dialogInfoVisible: false
+      dialogInfoVisible: false,
+      loading: false
     }
   },
   computed: {
@@ -119,6 +116,34 @@ export default {
       // userInfo是指向table改变的元素的指针
       this.$store.commit('userManage/SET_USERINFO', userInfo)
       this.$store.commit('userManage/SET_DIALOG', true)
+    },
+    deleteUser(scope, rows) {
+      const json = { uid: scope.row.uid }
+      this.$store.dispatch('userManage/delete', json).then(() => {
+        // 表格中删除
+        rows.splice(scope.$index, 1)
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch((error) => {
+        const message = error === 40301 ? '请向删除完用户其他信息，如视频等' : '未知错误，请重新删除'
+        this.$alert(message, '删除失败', { confirmButtonText: '确定' })
+      })
+    },
+    deleteUserWarning(scope, rows) {
+      this.$confirm('此操作将永久删除用户, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteUser(scope, rows)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }

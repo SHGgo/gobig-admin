@@ -2,9 +2,7 @@
 <template>
   <div class="button-bar-container">
     <el-row>
-      <el-button type="primary" @click="insertUser">
-        添加
-      </el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="insertUser">添加用户</el-button>
     </el-row>
   </div>
 </template>

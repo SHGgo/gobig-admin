@@ -19,7 +19,6 @@ export default {
   components: {
     SearchBar,
     ButtonBar,
-    StateBar,
     ShowTable,
     InsertAndEditUserInfo
   },

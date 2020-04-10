@@ -70,8 +70,8 @@
           </el-col>
         </el-row>
         <el-form-item style="margin-top:30px">
-          <el-button v-if="userInfo" type="primary" icon="el-icon-upload" @click="submitForm('userInfoForm')">立即更新</el-button>
-          <el-button v-else type="primary" icon="el-icon-plus" @click="submitForm('userInfoForm')">立即添加</el-button>
+          <el-button v-if="userInfo" type="primary" :icon="!loading?'el-icon-upload':'el-icon-loading'" :disabled="loading" @click="submitForm('userInfoForm')">立即更新</el-button>
+          <el-button v-else type="primary" :icon="!loading?'el-icon-plus':'el-icon-loading'" :disabled="loading" @click="submitForm('userInfoForm')">立即添加</el-button>
           <el-button style="margin-left:50px" @click="resetForm('userInfoForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -101,6 +101,7 @@ export default {
       callback()
     }
     return {
+      loading: false,
       figureFile: null,
       defaultUserInfoForm: {
         userAccount: '',
@@ -192,6 +193,7 @@ export default {
       return false
     },
     submitForm(formName) {
+      this.loading = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let formData = new FormData()
@@ -216,11 +218,13 @@ export default {
           message: '更新用户成功',
           type: 'success'
         })
+        this.loading = false
       }).catch((error) => {
-        // 上传成功,处理并展示
+        // 上传失败,处理并展示
         console.log(error)
         const message = this.errorFix(error)
         this.$alert(message, '更新失败', { confirmButtonText: '确定' })
+        this.loading = false
       })
     },
     inserUser(json, formData) {
@@ -230,11 +234,13 @@ export default {
           message: '添加用户成功',
           type: 'success'
         })
+        this.loading = false
       }).catch((error) => {
         // 上传成功,处理并展示
         console.log(error)
         const message = this.errorFix(error)
         this.$alert(message, '添加失败', { confirmButtonText: '确定' })
+        this.loading = false
       })
     },
     resetForm(formName) {

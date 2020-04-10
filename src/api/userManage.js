@@ -60,3 +60,19 @@ export function uploadUserContent(data) {
     }
   })
 }
+
+/**
+ *
+ * @param {JSON} data
+ */
+export function deleteUserContent(data) {
+  // console.log(data)
+  return request({
+    url: 'user/deleteUserContent',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    }
+  })
+}
