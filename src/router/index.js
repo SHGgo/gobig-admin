@@ -173,6 +173,20 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/videoManage',
+    component: Layout,
+    name: 'videoManage',
+    // meta: { title: '视频管理', icon: 'video' },
+    children: [
+      {
+        path: 'videoManage',
+        meta: { title: '视频管理', icon: 'video' },
+        component: () => import('@/views/videoManage/index')
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

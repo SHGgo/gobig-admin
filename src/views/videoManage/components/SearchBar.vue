@@ -4,8 +4,10 @@
     <el-form ref="searchForm" :inline="true" :model="searchForm" :rules="rules" class="demo-form-inline">
       <el-form-item ref="condition" label="查询条件:" prop="condition">
         <el-select v-model="searchForm.condition" placeholder="查询条件">
+          <el-option label="vid" value="vid" />
+          <el-option label="标题" value="title" />
           <el-option label="uid" value="uid" />
-          <el-option label="昵称" value="nickName" />
+          <el-option label="作者" value="author" />
         </el-select>
       </el-form-item>
       <el-form-item label="查询内容:" prop="keyWord">
@@ -28,16 +30,21 @@ export default {
         // 查询所有
         callback()
       }
-      if (this.searchForm.condition === 'uid') {
+      if (this.searchForm.condition === 'uid' || this.searchForm.condition === 'vid') {
         // uid验证
         if (!Number.isInteger(Number.parseInt(value))) {
           callback(new Error('请输入数字'))
           return
         }
-      } else if (this.searchForm.condition === 'nickName') {
+      } else if (this.searchForm.condition === 'author') {
         // nickName验证
         if (!/^[\u4E00-\u9FA5a-zA-Z0-9_-]{1,10}$/.test(value)) {
           callback(new Error('最多10位汉字、数字、字母等字符'))
+          return
+        }
+      } else if (this.searchForm.condition === 'title') {
+        if (!/^[\u4E00-\u9FA5a-zA-Z0-9_-]{1,30}$/.test(value)) {
+          callback(new Error('最多30位汉字、数字、字母等字符'))
           return
         }
       }
@@ -70,8 +77,8 @@ export default {
   watch: {
     // 处理关键字
     watchKeyWord() {
-      this.$store.commit('userManage/SET_KEYWORD', this.searchForm.keyWord)
-      this.$store.commit('userManage/SET_CONDITION', this.searchForm.condition)
+      this.$store.commit('videoManage/SET_KEYWORD', this.searchForm.keyWord)
+      this.$store.commit('videoManage/SET_CONDITION', this.searchForm.condition)
     },
     watchCondition() {
       this.$store.commit('videoManage/SET_KEYWORD', this.searchForm.keyWord)
@@ -83,7 +90,7 @@ export default {
       // 验证后搜索
       this.$refs.searchForm.validate(valid => {
         if (valid) {
-          this.$store.dispatch('userManage/search', {}).then(() => {
+          this.$store.dispatch('videoManage/search', {}).then(() => {
             this.$message({
               message: '查询成功',
               type: 'success',

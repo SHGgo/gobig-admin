@@ -1,12 +1,13 @@
-import { search, insertUserContent, uploadUserFigure, uploadUserContent, deleteUserContent } from '@/api/userManage'
+import { search, uploadVideoContent, uploadVideoFile, deleteVideo } from '@/api/videoManage'
 import { searchFix } from '@/utils/search-param'
 
 const getDefaultState = () => ({
   showTable: [],
   keyWord: '',
   condition: '',
-  userInfo: null, // userInfo是指向table改变的元素的指针
-  dialogInfoVisible: false
+  videoInfo: null, // videoInfo是指向table改变的元素的指针
+  dialogInfoVisible: false,
+  progress: 0
 })
 
 const state = getDefaultState()
@@ -21,11 +22,14 @@ const mutations = {
   SET_CONDITION(state, condition) {
     state.condition = condition
   },
-  SET_USERINFO(state, userInfo) {
-    state.userInfo = userInfo
+  SET_VIDEOINFO(state, videoInfo) {
+    state.videoInfo = videoInfo
   },
   SET_DIALOG(state, dialogInfoVisible) {
     state.dialogInfoVisible = dialogInfoVisible
+  },
+  SET_PROGRESS(state, progress) {
+    state.progress = progress
   }
 }
 
@@ -43,6 +47,8 @@ const actions = {
         if (!data) {
           reject('查询失败，请稍后再试')
         }
+        console.log(data)
+        // TODO: SHOWTABLE
         commit('SET_SHOWTABLE', data)
         resolve(data)
       }).catch(error => {
@@ -57,11 +63,12 @@ const actions = {
    */
   insert({ commit, state }, { json, formData }) {
     return new Promise((resolve, reject) => {
-      insertUserContent(json).then(response => {
-        formData.set('uid', response.data.user.uid)
+      uploadVideoContent(json).then(response => {
+        formData.set('vid', response.data.vid)
       }).then(() => {
-        uploadUserFigure(formData).catch((error) => {
-          reject(error)
+        uploadVideoFile(formData, (progressEvent) => {
+          // TODO:进度条
+          state.progress = (progressEvent.loaded / progressEvent.total * 100 | 0) + '%'
         })
         resolve()
       }).catch(error => {
@@ -74,12 +81,12 @@ const actions = {
    * @param {JSON} json
    * @param {FormData} formData
    */
-  update({ state }, { json, formData }) {
+  update({ state, commit }, { json, formData }) {
     return new Promise((resolve, reject) => {
-      uploadUserContent(json).then(() => {
+      uploadVideoContent(json).then(() => {
         if (formData) {
           formData.set('uid', json.uid)
-          uploadUserFigure(formData)
+          uploadVideoFile(formData)
         }
         resolve()
       }).catch(error => {
@@ -89,7 +96,7 @@ const actions = {
   },
   delete({ state }, json) {
     return new Promise((resolve, reject) => {
-      deleteUserContent(json).then(() => {
+      deleteVideo(json).then(() => {
         resolve()
       }).catch(error => {
         reject(error)

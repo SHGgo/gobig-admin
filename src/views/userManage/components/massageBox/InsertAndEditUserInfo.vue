@@ -38,10 +38,13 @@
             class="avatar-uploader"
             action="#"
             :show-file-list="false"
+            :limit="1"
+            accept="image/png, image/jpeg, image/jpg"
             :before-upload="checkAndPreviewImg"
           >
             <img v-if="userInfoForm.figure" :src="userInfoForm.figure" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
+            <div slot="tip" class="el-upload__tip">支持jpg,png等格式,5mb以下大小的图片</div>
           </el-upload>
         </el-form-item>
         <el-form-item prop="birthDate" label="生日">
@@ -70,8 +73,12 @@
           </el-col>
         </el-row>
         <el-form-item style="margin-top:30px">
-          <el-button v-if="userInfo" type="primary" :icon="!loading?'el-icon-upload':'el-icon-loading'" :disabled="loading" @click="submitForm('userInfoForm')">立即更新</el-button>
-          <el-button v-else type="primary" :icon="!loading?'el-icon-plus':'el-icon-loading'" :disabled="loading" @click="submitForm('userInfoForm')">立即添加</el-button>
+          <el-button
+            type="primary"
+            :icon="!loading?'el-icon-upload':'el-icon-loading'"
+            :disabled="loading"
+            @click="submitForm('videoInfoForm')"
+          >{{ userInfo?'立即更新':'立即添加' }}</el-button>
           <el-button style="margin-left:50px" @click="resetForm('userInfoForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -175,11 +182,11 @@ export default {
   },
   methods: {
     checkAndPreviewImg(file) {
-      const isJPG = file.type === 'image/jpeg'
+      const isJPG = /image\/[jpeg|png|jpg]/.test(file.type)
       const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+        this.$message.error('图片格式错误!')
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
@@ -203,7 +210,7 @@ export default {
             this.editUser(this.userInfoForm, formData)
           } else {
             const json = this.insertJsonFix()
-            this.inserUser(json, formData)
+            this.insertUser(json, formData)
           }
         } else {
           return false
@@ -227,8 +234,8 @@ export default {
         this.loading = false
       })
     },
-    inserUser(json, formData) {
-      this.$store.dispatch('userManage/inset', { json, formData }).then(() => {
+    insertUser(json, formData) {
+      this.$store.dispatch('userManage/insert', { json, formData }).then(() => {
         // 上传成功，处理并展示
         this.$message({
           message: '添加用户成功',
