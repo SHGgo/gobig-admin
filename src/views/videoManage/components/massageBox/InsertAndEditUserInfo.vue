@@ -49,7 +49,7 @@
             <div slot="tip" class="el-upload__tip">支持jpg,png等格式,5mb以下大小的图片</div>
           </el-upload>
         </el-form-item>
-        <el-form-item prop="videoRes" label="视频" style="width:600px">
+        <el-form-item v-if="!videoInfo" prop="videoRes" label="视频" style="width:600px">
           <el-upload
             accept="video/*"
             action="#"
@@ -246,17 +246,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true
-          // 1.判断上传文件
           let formData = new FormData()
-          if (this.picFile || this.videoFile) {
-            // 1.0 设置vid
-            if (this.picFile) {
-              // 1.1是否上传头像
-              formData.set('picFile', this.picFile)
-            }
+          if (this.picFile) { // 1.判断上传文件
+            formData.set('picFile', this.picFile) // 1.1上传封面，才可以上传视频
             if (this.videoFile) {
-              // 1.2是否上传视频
-              formData.set('videoFile', this.videoFile)
+              formData.set('videoFile', this.videoFile) // 1.2是否上传视频
             }
           } else { // 1.3都不需要上传
             formData = null
@@ -277,9 +271,9 @@ export default {
         .dispatch('videoManage/update', { json, formData })
         .then(() => {
           // 上传成功，处理并展示
-          Object.assign(this.userInfo, this.videoInfoForm)
+          Object.assign(this.videoInfo, this.videoInfoForm)
           this.$message({
-            message: '更新用户成功',
+            message: '更新视频成功',
             type: 'success'
           })
           this.loading = false
@@ -313,7 +307,7 @@ export default {
       this.$refs[formName].resetFields()
     },
     closeDialog() {
-      this.$store.commit('videoManage/SET_USERINFO', null)
+      this.$store.commit('videoManage/SET_VIDEOINFO', null)
     },
     // TODO: 抽出
     errorFix(error) {

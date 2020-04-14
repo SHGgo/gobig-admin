@@ -85,7 +85,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       uploadVideoContent(json).then(() => {
         if (formData) {
-          formData.set('uid', json.uid)
+          formData.set('vid', json.vid)
           uploadVideoFile(formData)
         }
         resolve()

@@ -30,7 +30,7 @@ export function uploadVideoFile(data, progressFix) {
     },
     onUploadProgress: progressEvent => {
       // TODO:进度条
-      progressFix(progressEvent)
+      // progressFix(progressEvent)
     }
   })
 }
@@ -58,7 +58,7 @@ export function uploadVideoContent(data) {
 export function deleteVideo(data) {
   // console.log(data)
   return request({
-    url: 'user/deleteVideo',
+    url: 'video/deleteVideoContent',
     method: 'post',
     data,
     headers: {

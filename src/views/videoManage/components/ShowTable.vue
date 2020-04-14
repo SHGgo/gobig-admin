@@ -56,13 +56,13 @@
       </el-table-column>
       <el-table-column align="center" label="Actions" min-width="200" fixed="right">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" :disabled="loading" @click="editUser(scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="deleteUserWarning(scope,tableData)">删除</el-button>
+          <el-button type="primary" size="small" :disabled="loading" @click="edit(scope.row)">编辑</el-button>
+          <el-button type="danger" size="small" @click="deleteWarning(scope,tableData)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination
-      v-show="total>0"
+      v-show="total>10"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
@@ -134,7 +134,7 @@ export default {
       this.$store.commit('videoManage/SET_VIDEOINFO', videoInfo)
       this.$store.commit('videoManage/SET_DIALOG', true)
     },
-    deleteUser(scope, rows) {
+    delete(scope, rows) {
       const json = { vid: scope.row.vid }
       this.$store
         .dispatch('videoManage/delete', json)
@@ -147,28 +147,22 @@ export default {
           })
         })
         .catch(error => {
-          const message =
-            error === 40301
-              ? '请向删除完用户其他信息，如视频等'
-              : '未知错误，请重新删除'
-          this.$alert(message, '删除失败', { confirmButtonText: '确定' })
+          this.$alert(error, '删除失败', { confirmButtonText: '确定' })
         })
     },
-    deleteUserWarning(scope, rows) {
-      this.$confirm('此操作将永久删除用户, 是否继续?', '警告', {
+    deleteWarning(scope, rows) {
+      this.$confirm('此操作将永久删除视频, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
+      }).then(() => {
+        this.delete(scope, rows)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
-        .then(() => {
-          this.deleteUser(scope, rows)
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
     }
   }
 }
