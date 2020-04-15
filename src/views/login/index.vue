@@ -56,14 +56,13 @@
 
       <div class="tips">
         <span style="margin-right:20px;">adminAccount: admin</span>
-        <span>password: any</span>
+        <span>password: 1234</span>
       </div>
     </el-form>
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'Login',
   data() {
@@ -74,10 +73,22 @@ export default {
       },
       loginRules: {
         adminAccount: [
-          { required: true, min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
+          {
+            required: true,
+            min: 3,
+            max: 15,
+            message: '长度在 3 到 15 个字符',
+            trigger: 'blur'
+          }
         ],
         adminPassword: [
-          { required: true, min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
+          {
+            required: true,
+            min: 3,
+            max: 15,
+            message: '长度在 3 到 15 个字符',
+            trigger: 'blur'
+          }
         ]
       },
       loading: false,

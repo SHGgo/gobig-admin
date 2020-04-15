@@ -46,46 +46,39 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/home',
     children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      path: 'home',
+      name: 'home',
+      component: () => import('@/views/home/index'),
+      meta: { title: '主页', icon: 'home' }
     }]
   },
 
   {
-    path: '/example',
+    path: '/userManage',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    name: 'userManage',
+    // meta: { title: '用户管理', icon: 'user' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'userManage',
+        meta: { title: '用户管理', icon: 'user' },
+        component: () => import('@/views/userManage/index')
       }
     ]
   },
 
   {
-    path: '/form',
+    path: '/videoManage',
     component: Layout,
+    name: 'videoManage',
+    // meta: { title: '视频管理', icon: 'video' },
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        path: 'videoManage',
+        meta: { title: '视频管理', icon: 'video' },
+        component: () => import('@/views/videoManage/index')
       }
     ]
   },
@@ -94,11 +87,8 @@ export const constantRoutes = [
     path: '/nested',
     component: Layout,
     redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
+    name: 'nested',
+    meta: { title: '嵌套展示', icon: 'nested' },
     children: [
       {
         path: 'menu1',
@@ -144,45 +134,6 @@ export const constantRoutes = [
         path: 'menu2',
         component: () => import('@/views/nested/menu2/index'),
         meta: { title: 'menu2' }
-      }
-    ]
-  },
-
-  {
-    path: '/external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'external-link', icon: 'link' }
-      }
-    ]
-  },
-
-  {
-    path: '/userManage',
-    component: Layout,
-    name: 'userManage',
-    // meta: { title: '用户管理', icon: 'user' },
-    children: [
-      {
-        path: 'userManage',
-        meta: { title: '用户管理', icon: 'user' },
-        component: () => import('@/views/userManage/index')
-      }
-    ]
-  },
-
-  {
-    path: '/videoManage',
-    component: Layout,
-    name: 'videoManage',
-    // meta: { title: '视频管理', icon: 'video' },
-    children: [
-      {
-        path: 'videoManage',
-        meta: { title: '视频管理', icon: 'video' },
-        component: () => import('@/views/videoManage/index')
       }
     ]
   },

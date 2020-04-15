@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'gobig Admin Template',
+  title: 'Gobig Admin',
 
   /**
    * @type {boolean} true | false
