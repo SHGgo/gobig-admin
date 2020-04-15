@@ -1,7 +1,7 @@
 # gobig的后台管理系统
 
-- 基于vue-admin-template的开发
-- https://github.com/PanJiaChen/vue-admin-template
+- 展示链接： [Gobig Admin](https://www.gobigtonight.top/admin)
+- 基于vue-admin-template的开发: [GitHub地址](https://github.com/PanJiaChen/vue-admin-template)
 
 - 文档完善中···
 ---
@@ -18,7 +18,6 @@
 
 明天开发的焦点
 1. 表数据的增删改功能实现
-
 ---
 ### 2020年4月10日
 
@@ -30,3 +29,8 @@
 
 明天开发的焦点
 1. 视频管理和评论管理基础搭建
+---
+### 2020年4月15日
+
+管理系统今天上线：[Gobig Admin](https://www.gobigtonight.top/admin)
+
