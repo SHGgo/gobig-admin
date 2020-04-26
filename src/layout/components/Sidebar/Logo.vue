@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: 'Gobig Admin Template',
+      title: 'Gobig Admin',
       logo: true
     }
   }

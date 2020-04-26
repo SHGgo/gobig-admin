@@ -77,7 +77,7 @@
             type="primary"
             :icon="!loading?'el-icon-upload':'el-icon-loading'"
             :disabled="loading"
-            @click="submitForm('videoInfoForm')"
+            @click="submitForm('userInfoForm')"
           >{{ userInfo?'立即更新':'立即添加' }}</el-button>
           <el-button style="margin-left:50px" @click="resetForm('userInfoForm')">重置</el-button>
         </el-form-item>
