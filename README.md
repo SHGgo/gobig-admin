@@ -48,7 +48,7 @@
 ## 生态
 1. vuex / vue-router 
 2. axios
-3. sass
+3. scss
 4. eslint
 
 ## 工具

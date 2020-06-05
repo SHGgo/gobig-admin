@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">欢 迎 回 来</h3>
       </div>
 
       <el-form-item prop="adminAccount">
@@ -19,7 +19,7 @@
         <el-input
           ref="adminAccount"
           v-model="loginForm.adminAccount"
-          placeholder="Username"
+          placeholder="账号"
           name="adminAccount"
           type="text"
           tabindex="1"
@@ -36,7 +36,7 @@
           ref="password"
           v-model="loginForm.adminPassword"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密码"
           name="adminPassword"
           tabindex="2"
           auto-complete="on"
@@ -55,8 +55,8 @@
       >Login</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">adminAccount: admin</span>
-        <span>password: 1234</span>
+        <span style="margin-right:20px;">账号: admin</span>
+        <span>密码: 1234</span>
       </div>
     </el-form>
   </div>
